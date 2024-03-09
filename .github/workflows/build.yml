@@ -13,7 +13,9 @@ jobs:
         runs-on: macos-14
         steps:
             - name: Install prerequisites
-              run: brew install autoconf
+              run: |
+                    brew install autoconf
+                    brew install --cask packages
 
             - name: Checkout OpenJDK
               run: git clone https://github.com/openjdk/jdk21u.git -b jdk-21.0.2+13 --depth 1
@@ -24,8 +26,25 @@ jobs:
                     arch -x86_64 bash configure --disable-precompiled-headers --with-debug-level=release --with-native-debug-symbols=none --with-extra-cxxflags="-stdlib=libc++" --enable-warnings-as-errors=no --with-conf-name=release --without-version-opt --without-version-pre
                     make images
 
+            - name: Archive OpenJDK
+              run: zip -r openjdk.zip jdk21u/build/release/images/jdk-bundle/
+
+            - name: Checkout Adoptium packaging scripts
+              run: git clone https://github.com/adoptium/installer.git
+
+            - name: Package OpenJDK
+              run: |
+                    ./installer/packagesbuild.sh --major_version 21 --full_version 21.0.2+13 --input_directory build/release/images/jdk-bundle/jdk-21.0.2.jdk --output_directory openjdk.pkg --jvm hotspot --architecture x86_64 --type jdk --vendor openjdk --package-name OpenJDK --logo /System/Library/CoreServices/JavaLauncher.app/Contents/Resources/class.icns
+
             - name: Upload OpenJDK
               uses: actions/upload-artifact@v2
               with:
                     name: openjdk
-                    path: jdk21u/build/release/images/jdk-bundle/jdk-21.0.2.jdk
+                    path: openjdk.pkg
+
+            - name: Upload OpenJDK archive
+              uses: actions/upload-artifact@v2
+              with:
+                    name: openjdk-archive
+                    path: openjdk.zip
+
