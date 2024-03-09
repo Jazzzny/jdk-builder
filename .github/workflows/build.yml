@@ -1,0 +1,28 @@
+name: Build OpenJDK 21
+
+on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+    release:
+      types: [published]
+
+jobs:
+    build:
+        runs-on: macos-14
+        steps:
+            - name: Checkout OpenJDK
+              run: git clone https://github.com/openjdk/jdk21u.git -b jdk-21.0.2+13 --depth 1
+
+            - name: Compile OpenJDK
+              run: |
+                    cd jdk21u
+                    arch -x86_64 bash configure --disable-precompiled-headers --with-debug-level=release --with-native-debug-symbols=none --with-extra-cxxflags="-stdlib=libc++" --enable-warnings-as-errors=no --with-conf-name=release --without-version-opt --without-version-pre
+                    make images
+
+            - name: Upload OpenJDK
+              uses: actions/upload-artifact@v2
+              with:
+                    name: openjdk
+                    path: jdk21u/build/release/images/jdk-bundle/jdk-21.0.2.jdk
