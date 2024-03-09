@@ -35,7 +35,7 @@ jobs:
             - name: Package OpenJDK
               run: |
                     cd installer/pkgbuild
-                    ./packagesbuild.sh --major_version 21 --full_version 21.0.2+13 --input_directory build/release/images/jdk-bundle/jdk-21.0.2.jdk --output_directory ../../openjdk.pkg --jvm hotspot --architecture x86_64 --type jdk --vendor java --package-name OpenJDK --logo /System/Library/CoreServices/JavaLauncher.app/Contents/Resources/class.icns
+                    ./packagesbuild.sh --major_version 21 --full_version 21.0.2+13 --input_directory ../../build/release/images/jdk-bundle/jdk-21.0.2.jdk --output_directory ../../openjdk.pkg --jvm hotspot --architecture x86_64 --type jdk --vendor java --package-name OpenJDK --logo /System/Library/CoreServices/JavaLauncher.app/Contents/Resources/class.icns
                     cd ../..
 
             - name: Upload OpenJDK
