@@ -23,11 +23,11 @@ jobs:
             - name: Compile OpenJDK
               run: |
                     cd jdk21u
-            #        arch -x86_64 bash configure --disable-precompiled-headers --with-debug-level=release --with-native-debug-symbols=none --with-extra-cxxflags="-stdlib=libc++" --enable-warnings-as-errors=no --with-conf-name=release --without-version-opt --without-version-pre
-            #        make images
+                    arch -x86_64 bash configure --disable-precompiled-headers --with-debug-level=release --with-native-debug-symbols=none --with-extra-cxxflags="-stdlib=libc++" --enable-warnings-as-errors=no --with-conf-name=release --without-version-opt --without-version-pre
+                    make images
 
-            #- name: Archive OpenJDK
-            #  run: zip -r openjdk.zip jdk21u/build/release/images/jdk-bundle/
+            - name: Archive OpenJDK
+              run: zip -r openjdk.zip jdk21u/build/release/images/jdk-bundle/
 
             - name: Checkout Adoptium packaging scripts
               run: git clone https://github.com/adoptium/installer.git
